@@ -67,16 +67,17 @@ int AVL::height(Node *node) {
 }
 int AVL::whatLevelIam(int number) {
     Node* aux = this->root;
-    int data;
+    int data,level = 0;
     while (aux != nullptr) {
         data = aux->getData();
         if (number == data) {
-            return height(aux);
+            return level;
         } else if (number < data) {
             aux = aux->getLeft();
         } else {
             aux = aux->getRight();
         }
+        level++;
     }
     return -1;
 }
@@ -101,5 +102,9 @@ void AVL::insert(int num) {
             next = aux->getRight();
         }
     }
-    
+    if (num < aux->getData()) {
+        aux->setLeft(new Node(num));
+    } else {
+        aux->setRight(new Node(num));
+    }
 }
