@@ -89,8 +89,6 @@ int AVL::balance(Node *node) {
     int heightRight = node->getRight()->getHeight();
     return heightLeft - heightRight;
 }
-
-    // public
 void AVL::insert(int num) {
     Node *aux = this->root;
     Node *next = aux;
