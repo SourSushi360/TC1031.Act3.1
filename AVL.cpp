@@ -85,24 +85,47 @@ int AVL::balance(Node *node) {
     if (node == nullptr) {
         return 0;
     }
-    int heightLeft =  node->getLeft()->getHeight();
-    int heightRight = node->getRight()->getHeight();
-    return heightLeft - heightRight;
+    return height(node->getLeft()) - height(node->getRight());
 }
-void AVL::insert(int num) {
-    Node *aux = this->root;
-    Node *next = aux;
-    while (next != nullptr) {
-        aux = next;
-        if (num < aux->getData()) {
-            next = aux->getLeft();
-        } else {
-            next = aux->getRight();
-        }
+Node* rotateRight(Node* y) {
+    Node* x = y->getLeft();
+    Node* T2 = x->getRight();
+
+    x->setRight(y);
+    y->setLeft(T2);
+    y->setHeight(1 + (x->getLeft() != nullptr ? x->getLeft()->getHeight() : 0));
+    x->setHeight(1 + (y->getRight() != nullptr ? y->getRight()->getHeight() : 0));
+
+    return x;
+}
+Node* rotateLeft(Node* x) {
+    Node* y = x->getRight();
+    Node* T2 = y->getLeft();
+
+    y->setLeft(x);
+    x->setRight(T2);
+    x->setHeight(1 + (x->getLeft() != nullptr ? x->getLeft()->getHeight() : 0));
+    y->setHeight(1 + (y->getRight() != nullptr ? y->getRight()->getHeight() : 0));
+
+    return y;
+}
+Node* AVL::findMinNode(Node *node) {
+    Node* aux = node;
+    while (aux->getLeft() != nullptr) {
+        aux = aux->getLeft();
     }
-    if (num < aux->getData()) {
-        aux->setLeft(new Node(num));
+    
+    return aux;
+}
+Node* AVL::insert(Node *node,int num) {
+    if (node == nullptr) {
+        Node *newNode = new Node(num);
+        return newNode;
+    } if (num < node->getData()) {
+        node->setLeft(insert(node->getLeft(),num));
+    } else if (num > node->getData()) {
+        node->setRight(insert(node->getRight(),num));
     } else {
-        aux->setRight(new Node(num));
+        return node;
     }
 }
