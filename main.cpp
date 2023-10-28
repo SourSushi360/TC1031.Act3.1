@@ -11,7 +11,7 @@ int main() {
     arbol.insert(6);
     arbol.insert(9);
 
-    //arbol.visit(1);
-    //arbol.visit(2);
-    //arbol.visit(3);
+    arbol.visit(1);
+    arbol.visit(2);
+    arbol.visit(3);
 }
