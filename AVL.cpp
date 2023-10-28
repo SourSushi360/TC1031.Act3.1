@@ -4,6 +4,8 @@
     última modificación: 25/10/2023
     Define las funciones del archivo AVL.hpp */
 #include "AVL.hpp"
+#include <iostream>
+#include <queue>
 
 // Node
 Node::Node(int data) {
@@ -219,9 +221,64 @@ void AVL::remove(int num) {
 void AVL::visit(int option) {
     switch (option) {
         case 1:
-            
+            preorder(this->root);
+            break;
+        case 2:
+            inorder(this->root);
+            break;
+        case 3:
+            postorder(this->root);
+            break;
+        case 4:
+            levelbylevel(this->root);
+            break;
+        default:
+            std::cout << "invalid option\n";
     }
+    
+    std::cout << std::endl;
 }
 int AVL::height() {
     height(this->root);
+}
+
+// print format
+void preorder(Node *node) {
+    if (node != nullptr) {
+        std::cout << node->getData() << " ";
+        preorder(node->getLeft());
+        preorder(node->getRight());
+    }
+}
+void inorder(Node *node) {
+    if (node != nullptr) {
+        inorder(node->getLeft());
+        std::cout << node->getData() << " ";
+        inorder(node->getRight());
+    }
+}
+void postorder(Node *node) {
+    if (node != nullptr) {
+        postorder(node->getLeft());
+        postorder(node->getRight());
+        std::cout << node->getData() << " ";
+    }
+}
+void levelbylevel(Node *node) {
+    if (node != nullptr) {
+        std::queue <Node*> lista;
+        lista.push(node);
+
+        while (!lista.empty()) {
+            Node *aux = lista.front();
+            std::cout << aux->getData() << " ";
+            lista.pop();
+
+            if (aux->getLeft() != nullptr) {
+                lista.push(node->getLeft());
+            } if (aux->getRight() != nullptr) {
+                lista.push(node->getRight());
+            }
+        }
+    }
 }
