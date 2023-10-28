@@ -110,7 +110,7 @@ Node* rotateLeft(Node* x) {
     return y;
 }
 Node* AVL::findMinNode(Node *node) {
-    Node* aux = node;
+    Node* aux = node->getRight();
     while (aux->getLeft() != nullptr) {
         aux = aux->getLeft();
     }
@@ -118,6 +118,7 @@ Node* AVL::findMinNode(Node *node) {
     return aux;
 }
 Node* AVL::insert(Node *node,int num) {
+    // busca el lugar vacío para el nodo
     if (node == nullptr) {
         Node *newNode = new Node(num);
         return newNode;
@@ -128,4 +129,83 @@ Node* AVL::insert(Node *node,int num) {
     } else {
         return node;
     }
+
+    // actualiza la altura
+    int leftH = height(node->getLeft()), rightH = height(node->getRight());
+    int height_ = leftH > rightH ? (1 + leftH) : (1 + rightH);
+    node->setHeight(height_);
+
+    // encuentra su balance y hace rotaciones al respecto
+    int balance_ = balance(node);
+    if (balance_ > 1 && num < node->getLeft()->getData()) {
+        return rotateRight(node);
+    }
+    if (balance_ < -1 && num > node->getRight()->getData()) {
+        return rotateLeft(node);
+    }
+    if (balance_ > 1 && num > node->getLeft()->getData()) {
+        node->setLeft(rotateLeft(node->getLeft()));
+        return rotateRight(node);
+    }
+    if (balance_ < -1 && num < node->getRight()->getData()) {
+        node->setRight(rotateRight(node->getRight()));
+        return rotateLeft(node);
+    }
+
+    return node;
+}
+Node* AVL::remove(Node *node,int num) {
+    if (node == nullptr) {
+        return node;
+    }
+
+    // busca el nodo a eliminar
+    if (num < node->getData()) {
+        node->setLeft(remove(node->getLeft(),num));
+    } else if (num > node->getData()) {
+        node->setRight(remove(node->getRight(),num));
+    } else {
+        if (node->getLeft() == nullptr || node->getRight() == nullptr) {
+            Node *aux = node->getLeft() ? node->getLeft() : node->getRight();
+            if (aux == nullptr) {
+                delete node;
+            } else {
+                *node = *aux;
+            }
+            delete aux;
+        } else {
+            Node *aux = findMinNode(node);
+            node->setData(aux->getData());
+            node->setRight(remove(node->getRight(),aux->getData()));
+        }
+    }
+
+    // revisa si ya puede salirse o si necesita balancear
+    if (node == nullptr) {
+        return node;
+    }
+
+    // actualiza altura
+    int leftH = height(node->getLeft()), rightH = height(node->getRight());
+    int height_ = leftH > rightH ? (1 + leftH) : (1 + rightH);
+    node->setHeight(height_);
+
+    // balancea el nodo
+    int balance_ = balance(node);
+    if (balance_ > 1 && balance(node->getLeft()) >= 0) {
+        return rotateRight(node);
+    }
+    if (balance_ < -1 && balance(node->getRight()) <= 0) {
+        return rotateLeft(node);
+    }
+    if (balance_ > 1 && balance(node->getLeft()) < 0) {
+        node->setLeft(rotateLeft(node->getLeft()));
+        return rotateRight(node);
+    }
+    if (balance_ < -1 && balance(node->getRight()) > 0) {
+        node->setRight(rotateRight(node->getRight()));
+        return rotateLeft(node);
+    }
+
+    return node;
 }
