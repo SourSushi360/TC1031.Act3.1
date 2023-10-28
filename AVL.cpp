@@ -209,3 +209,19 @@ Node* AVL::remove(Node *node,int num) {
 
     return node;
 }
+    // public
+void AVL::insert(int num) {
+    insert(this->root,num);
+}
+void AVL::remove(int num) {
+    remove(this->root,num);
+}
+void AVL::visit(int option) {
+    switch (option) {
+        case 1:
+            
+    }
+}
+int AVL::height() {
+    height(this->root);
+}
