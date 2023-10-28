@@ -89,7 +89,7 @@ int AVL::balance(Node *node) {
     }
     return height(node->getLeft()) - height(node->getRight());
 }
-Node* rotateRight(Node* y) {
+Node* AVL::rotateRight(Node* y) {
     Node* x = y->getLeft();
     Node* T2 = x->getRight();
 
@@ -100,7 +100,7 @@ Node* rotateRight(Node* y) {
 
     return x;
 }
-Node* rotateLeft(Node* x) {
+Node* AVL::rotateLeft(Node* x) {
     Node* y = x->getRight();
     Node* T2 = y->getLeft();
 
@@ -213,7 +213,7 @@ Node* AVL::remove(Node *node,int num) {
 }
     // public
 void AVL::insert(int num) {
-    insert(this->root,num);
+    this->root = insert(this->root,num);
 }
 void AVL::remove(int num) {
     remove(this->root,num);
@@ -239,32 +239,57 @@ void AVL::visit(int option) {
     std::cout << std::endl;
 }
 int AVL::height() {
-    height(this->root);
+    return height(this->root);
+}
+void AVL::ancestors(int num) {
+    if (this->root == nullptr) {
+        std::cout << "el arbol esta vacio\n";
+    }
+    bool check = false;
+    Node *aux = this->root;
+    while (aux != nullptr) {
+        if (aux->getData() == num) {
+            check = true;
+            break;
+        }
+        std::cout << aux->getData();
+        if (num < aux->getData()) {
+            aux = aux->getLeft();
+        } else {
+            aux = aux->getRight();
+        }
+    }
+
+    if (check) {
+        std::cout << "\n";
+    } else {
+        std::cout << "not found";
+    }
 }
 
 // print format
-void preorder(Node *node) {
+void AVL::preorder(Node *node) {
     if (node != nullptr) {
         std::cout << node->getData() << " ";
         preorder(node->getLeft());
         preorder(node->getRight());
     }
 }
-void inorder(Node *node) {
+void AVL::inorder(Node *node) {
     if (node != nullptr) {
         inorder(node->getLeft());
         std::cout << node->getData() << " ";
         inorder(node->getRight());
     }
 }
-void postorder(Node *node) {
+void AVL::postorder(Node *node) {
     if (node != nullptr) {
         postorder(node->getLeft());
         postorder(node->getRight());
         std::cout << node->getData() << " ";
     }
 }
-void levelbylevel(Node *node) {
+void AVL::levelbylevel(Node *node) {
     if (node != nullptr) {
         std::queue <Node*> lista;
         lista.push(node);

@@ -96,6 +96,10 @@ class AVL{
     //Imprime los ancestros de un dato
     void ancestors(int);
     
+    void preorder(Node*);
+    void inorder(Node*);
+    void postorder(Node*);
+    void levelbylevel(Node*);
 };
 
 #endif
